@@ -2,6 +2,10 @@ import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 
 export class MainScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Hello',
+  }
+
   render() {
     return (
       <View style={styles.screen}>

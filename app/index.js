@@ -1,8 +1,9 @@
 import { KeepAwake, registerRootComponent } from 'expo'
-import { MainScreen } from './screens/main'
+import { createAppContainer } from 'react-navigation'
+import { MainNavigator } from './navigators/main'
 
 if (__DEV__) {
   KeepAwake.activate()
 }
 
-registerRootComponent(MainScreen)
+registerRootComponent(createAppContainer(MainNavigator))
