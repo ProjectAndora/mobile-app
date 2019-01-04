@@ -4,12 +4,7 @@ export enum FieldValue {
   Nought,
 }
 
-export interface MiniBoardData {
-  row: FieldValue
-  fields: FieldValue[][]
-}
-
-export interface BoardData {
-  row: FieldValue
-  miniBoards: MiniBoardData[][]
+export interface BoardState {
+  turn: FieldValue,
+  values: FieldValue[][][][],
 }

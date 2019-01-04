@@ -1,11 +1,12 @@
 import { Subject, Observable } from 'rxjs'
 import { scan, startWith, publishReplay, refCount, map } from 'rxjs/operators'
 import { MiniBoardViewModel } from './mini-board'
-import { FieldValue } from '../support/entities'
+import { FieldValue, BoardState } from '../support/entities'
 import { trice, replace } from '../utils'
 
 export class BoardViewModel {
   readonly miniBoardsViewModels: MiniBoardViewModel[][]
+  readonly turn$: Observable<FieldValue>
 
   private readonly onFieldPress = new Subject<[number[], number[]]>()
 
@@ -18,32 +19,47 @@ export class BoardViewModel {
       )
     )
 
-    const values$: Observable<number[][][][]> = this.onFieldPress.asObservable().pipe(
-      scan((values, [[y, x], [subY, subX]]: [number[], number[]]) => replace(
-        values,
-        y,
-        replace(
-          values[y],
-          x,
+    const initialState: BoardState = {
+      turn: FieldValue.Cross,
+      values: initialValues,
+    }
+
+    const state$ = this.onFieldPress.asObservable().pipe(
+      scan(({ turn, values }: BoardState, [[y, x], [subY, subX]]: [number[], number[]] ) => ({
+        turn: turn === FieldValue.Cross ? FieldValue.Nought : FieldValue.Cross,
+        values: replace(
+          values,
+          y,
           replace(
-            values[y][x],
-            subY,
+            values[y],
+            x,
             replace(
-              values[y][x][subY],
-              subX,
-              FieldValue.Cross,
+              values[y][x],
+              subY,
+              replace(
+                values[y][x][subY],
+                subX,
+                turn,
+              ),
             ),
           ),
-        ),
-      ), initialValues),
-      startWith(initialValues),
+        )
+      }), initialState),
+      startWith(initialState),
+      publishReplay(1),
+      refCount(),
+    )
+
+    this.turn$ = state$.pipe(
+      map(state => state.turn),
       publishReplay(1),
       refCount(),
     )
 
     this.miniBoardsViewModels = trice(y => 
       trice(x => new MiniBoardViewModel(
-        values$.pipe(
+        state$.pipe(
+          map(state => state.values),
           map(values => values[y][x]),
           publishReplay(1),
           refCount(),

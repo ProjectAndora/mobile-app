@@ -1,24 +1,38 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { Subscription } from 'rxjs'
+import { View, Text, StyleSheet } from 'react-native'
 import { MiniBoard } from './fragments/mini-board'
 import { Separator, SeparatorType } from './fragments/separator'
 import { BoardViewModel } from '../../viewmodels/board'
 import { MiniBoardViewModel } from '../../viewmodels/mini-board'
+import { FieldValue } from '../../support/entities'
 
 interface Props {
 }
 
 interface State {
   viewModel: BoardViewModel
+  turn: FieldValue
 }
 
 export class GameBoardScreen extends React.Component<Props, State> {
+  private turnSub?: Subscription
+
   constructor(props: Props) {
     super(props)
 
     this.state = {
       viewModel: new BoardViewModel(),
+      turn: FieldValue.Cross,
     }
+  }
+
+  componentDidMount() {
+    this.turnSub = this.state.viewModel.turn$.subscribe(turn => this.setState({ turn }))
+  }
+
+  componentWillUnmount() {
+    this.turnSub && this.turnSub.unsubscribe()
   }
 
   private renderRow = (viewModels: MiniBoardViewModel[]) => (
@@ -35,10 +49,11 @@ export class GameBoardScreen extends React.Component<Props, State> {
   )
 
   render() {
-    const { viewModel } = this.state
+    const { viewModel, turn } = this.state
 
     return (
       <View style={styles.screen}>
+        <Text style={styles.title}>It's {turn === FieldValue.Cross ? 'X' : 'O'}'s turn</Text>
         <View style={styles.board}>
           <Separator type={SeparatorType.Horizontal} />
           {viewModel.miniBoardsViewModels.map((miniBoardsViewModelsRow, index) => (
@@ -59,7 +74,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
   },
+  title: {
+    fontSize: 20,
+    textAlign: 'center',
+  },
   board: {
+    marginTop: 20,
     aspectRatio: 1,
   },
   row: {

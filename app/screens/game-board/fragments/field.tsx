@@ -55,6 +55,7 @@ export class Field extends React.Component<Props, State> {
           <Image
             source={image}
             resizeMode='cover'
+            fadeDuration={0}
             style={styles.image}
           />
         </View>
