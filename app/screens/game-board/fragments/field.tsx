@@ -1,33 +1,74 @@
 import React from 'react'
-import { StyleSheet, View, Image, StyleProp, ViewStyle, ImageRequireSource } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableHighlight,
+  StyleProp,
+  ViewStyle,
+  ImageRequireSource,
+} from 'react-native'
+import { Subscription } from 'rxjs'
 import { FieldValue } from '../../../support/entities'
+import { FieldViewModel } from '../../../viewmodels/field'
 
 interface Props {
-  value: FieldValue
+  viewModel: FieldViewModel
   style?: StyleProp<ViewStyle>
 }
 
-export const Field = (props: Props) => {
-  const { value, style } = props
+interface State {
+  value: FieldValue
+}
 
-  let image: ImageRequireSource | null = null
-  if (value === FieldValue.Cross) {
-    image = require('../../../../assets/cross.png')
-  } else if (value === FieldValue.Nought) {
-    image = require('../../../../assets/nought.png')
+export class Field extends React.Component<Props, State> {
+  private valueSub?: Subscription
+
+  constructor(props: Props) {
+    super(props)
+
+    this.state = {
+      value: FieldValue.Empty,
+    }
   }
 
-  return (
-    <View style={style}>
-      {image !== null && (
-        <Image
-          source={image}
-          resizeMode='cover'
-          style={[styles.image]}
-        />
-      )}
-    </View>
-  )
+  componentDidMount() {
+    this.valueSub = this.props.viewModel.value$.subscribe(value => this.setState({ value }))
+  }
+
+  componentWillUnmount() {
+    this.valueSub && this.valueSub.unsubscribe()
+  }
+
+  render() {
+    let image: ImageRequireSource | null = null
+    const { value } = this.state
+    if (value === FieldValue.Cross) {
+      image = require('../../../../assets/cross.png')
+    } else if (value === FieldValue.Nought) {
+      image = require('../../../../assets/nought.png')
+    }
+
+    return image !== null
+      ? (
+        <View style={this.props.style}>
+          <Image
+            source={image}
+            resizeMode='cover'
+            style={styles.image}
+          />
+        </View>
+      )
+      : (
+        <TouchableHighlight
+          underlayColor='grey'
+          onPress={this.props.viewModel.onPress}
+          style={this.props.style}
+        >
+          <View style={styles.placeholder} />
+        </TouchableHighlight>
+      )
+  }
 }
 
 const styles = StyleSheet.create({
@@ -35,5 +76,9 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 'auto',
     height: 'auto',
+    margin: 5,
+  },
+  placeholder: {
+    flex: 1,
   },
 })

@@ -1,22 +1,23 @@
 import React from 'react'
 import { StyleSheet, View, StyleProp, ViewStyle } from 'react-native'
-import { FieldValue, MiniBoardData } from '../../../support/entities'
 import { Field } from './field'
 import { Separator, SeparatorType } from './separator'
+import { MiniBoardViewModel } from '../../../viewmodels/mini-board'
+import { FieldViewModel } from '../../../viewmodels/field'
 
 interface Props {
-  data: MiniBoardData
+  viewModel: MiniBoardViewModel
   style?: StyleProp<ViewStyle>
 }
 
-const renderRow = (values: FieldValue[]) => (
+const renderRow = (fieldsViewModels: FieldViewModel[]) => (
   <View style={styles.row}>
-    {values.map((value, index) => (
+    {fieldsViewModels.map((viewModel, index) => (
       <React.Fragment key={index}>
         {index > 0 && (
           <Separator type={SeparatorType.Vertical} />
         )}
-        <Field value={value} style={styles.field} />
+        <Field viewModel={viewModel} style={styles.field} />
       </React.Fragment>
     ))}
   </View>
@@ -24,13 +25,13 @@ const renderRow = (values: FieldValue[]) => (
 
 export const MiniBoard = (props: Props) => (
   <View style={props.style}>
-    <Field value={props.data.row} style={styles.backgroundField} />
-    {props.data.fields.map((rowFields, index) => (
+    {/* <Field value={props.data.row} style={styles.backgroundField} /> */}
+    {props.viewModel.fieldsViewModels.map((rowFieldsViewModels, index) => (
       <React.Fragment key={index}>
         {index > 0 && (
           <Separator type={SeparatorType.Horizontal} />
         )}
-        {renderRow(rowFields)}
+        {renderRow(rowFieldsViewModels)}
       </React.Fragment>
     ))}
   </View>
@@ -47,6 +48,5 @@ const styles = StyleSheet.create({
   },
   field: {
     flex: 1,
-    margin: 5,
   },
 })

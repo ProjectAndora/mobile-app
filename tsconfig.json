@@ -1,13 +1,15 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "es6",
+    "lib": [
+      "es6"
+    ],
     "allowSyntheticDefaultImports": true,
     "jsx": "react-native",
     "moduleResolution": "node",
     "noEmit": true,
     "noImplicitAny": true,
-    "skipLibCheck": true
   },
   "include": ["app"],
   "exclude": ["node_modules"]

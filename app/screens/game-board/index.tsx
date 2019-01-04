@@ -1,87 +1,53 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { FieldValue, MiniBoardData, BoardData } from '../../support/entities'
 import { MiniBoard } from './fragments/mini-board'
 import { Separator, SeparatorType } from './fragments/separator'
+import { BoardViewModel } from '../../viewmodels/board'
+import { MiniBoardViewModel } from '../../viewmodels/mini-board'
 
-export class GameBoardScreen extends React.Component {
-  private trice = <T extends any> (makeValue: (index: number) => T) => {
-    const values: T[] = []
-    for (let i = 0; i < 3; i++) {
-      values.push(makeValue(i))
-    }
+interface Props {
+}
 
-    return values
-  }
+interface State {
+  viewModel: BoardViewModel
+}
 
-  private randomFieldValue = () => {
-    const intValue = Math.floor(Math.random() * 3)
-    if (intValue === 0) {
-      return FieldValue.Empty
-    } else if (intValue === 1) {
-      return FieldValue.Cross
-    } else {
-      return FieldValue.Nought
+export class GameBoardScreen extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+
+    this.state = {
+      viewModel: new BoardViewModel(),
     }
   }
 
-  private generateRandomMiniBoardData = () => {
-    const data: MiniBoardData = {
-      row: this.randomFieldValue(),
-      fields: this.trice(
-        () => this.trice(
-          () => this.randomFieldValue()
-        )
-      ),
-    }
-
-    return data
-  }
-
-  private generateRandomBoardData = () => {
-    const data: BoardData = {
-      row: this.randomFieldValue(),
-      miniBoards: this.trice(
-        () => this.trice(
-          () => this.generateRandomMiniBoardData()
-        )
-      ),
-    }
-
-    return data
-  }
-
-  private renderRow = (row: MiniBoardData[]) => (
+  private renderRow = (viewModels: MiniBoardViewModel[]) => (
     <View style={styles.row}>
-      {row.map((miniBoard, index) => (
+      {viewModels.map((viewModel, index) => (
         <React.Fragment key={index}>
           {index > 0 && (
             <Separator type={SeparatorType.Vertical} />      
           )}
-          <MiniBoard data={miniBoard} style={styles.miniBoard} />
-        </React.Fragment>
-      ))}
-    </View>
-  )
-
-  private renderBoard = (data: BoardData) => (
-    <View style={styles.board}>
-      <Separator type={SeparatorType.Horizontal} />
-      {data.miniBoards.map((miniBoardRow, index) => (
-        <React.Fragment key={index}>
-          {this.renderRow(miniBoardRow)}
-          <Separator type={SeparatorType.Horizontal} />
+          <MiniBoard viewModel={viewModel} style={styles.miniBoard} />
         </React.Fragment>
       ))}
     </View>
   )
 
   render() {
-    const boardData = this.generateRandomBoardData()
+    const { viewModel } = this.state
 
     return (
       <View style={styles.screen}>
-        {this.renderBoard(boardData)}
+        <View style={styles.board}>
+          <Separator type={SeparatorType.Horizontal} />
+          {viewModel.miniBoardsViewModels.map((miniBoardsViewModelsRow, index) => (
+            <React.Fragment key={index}>
+              {this.renderRow(miniBoardsViewModelsRow)}
+              <Separator type={SeparatorType.Horizontal} />
+            </React.Fragment>
+          ))}
+        </View>
       </View>
     )
   }
