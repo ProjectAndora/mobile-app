@@ -6,10 +6,12 @@ import { trice } from '../utils'
 
 export class MiniBoardViewModel {
   readonly fieldsViewModels: FieldViewModel[][]
+  readonly rowFieldViewModel: FieldViewModel
 
   constructor(
     values$: Observable<FieldValue[][]>,
     public readonly active$: Observable<boolean>,
+    rowValue$: Observable<FieldValue>,
     onPress: (pos: number[]) => void,
   ) {
     this.fieldsViewModels = trice(y =>
@@ -23,5 +25,7 @@ export class MiniBoardViewModel {
         () => onPress([y, x]),
       ))
     )
+
+    this.rowFieldViewModel = new FieldViewModel(rowValue$, () => {})
   }
 }

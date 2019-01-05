@@ -53,7 +53,9 @@ export class MiniBoard extends React.Component<Props, State> {
     return (
       <View style={[ this.state.active && styles.activeContainer, this.props.style ]}>
         <View style={styles.innerContainer} pointerEvents={this.state.active ? 'auto' : 'none'}>
-          {/* <Field value={props.data.row} style={styles.backgroundField} /> */}
+          <View pointerEvents='none' style={StyleSheet.absoluteFill}>
+            <Field viewModel={this.props.viewModel.rowFieldViewModel} style={styles.rowField} />
+          </View>
           {this.props.viewModel.fieldsViewModels.map((rowFieldsViewModels, index) => (
             <React.Fragment key={index}>
               {index > 0 && (
@@ -76,8 +78,8 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 10,
   },
-  backgroundField: {
-    ...StyleSheet.absoluteFillObject,
+  rowField: {
+    flex: 1,
     opacity: 0.5,
   },
   row: {
