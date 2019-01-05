@@ -8,9 +8,9 @@ import {
   ViewStyle,
   ImageRequireSource,
 } from 'react-native'
-import { Subscription } from 'rxjs'
 import { FieldValue } from '../../../support/entities'
 import { FieldViewModel } from '../../../view-models/field'
+import { Binder, DisposeBag } from '../../../utils'
 
 interface Props {
   viewModel: FieldViewModel
@@ -22,7 +22,7 @@ interface State {
 }
 
 export class Field extends React.Component<Props, State> {
-  private valueSub?: Subscription
+  private readonly disposeBag = new DisposeBag()
 
   constructor(props: Props) {
     super(props)
@@ -33,11 +33,13 @@ export class Field extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.valueSub = this.props.viewModel.value$.subscribe(value => this.setState({ value }))
+    Binder(this)
+      .bind('value', this.props.viewModel.value$)
+      .disposeBy(this.disposeBag)
   }
 
   componentWillUnmount() {
-    this.valueSub && this.valueSub.unsubscribe()
+    this.disposeBag.dispose()
   }
 
   render() {

@@ -1,11 +1,11 @@
 import React from 'react'
-import { Subscription } from 'rxjs'
 import { View, Text, StyleSheet } from 'react-native'
 import { MiniBoard } from './fragments/mini-board'
 import { Separator, SeparatorType } from './fragments/separator'
 import { BoardViewModel } from '../../view-models/board'
 import { MiniBoardViewModel } from '../../view-models/mini-board'
 import { FieldValue } from '../../support/entities'
+import { Binder, DisposeBag } from '../../utils'
 
 interface Props {
 }
@@ -16,7 +16,7 @@ interface State {
 }
 
 export class GameBoardScreen extends React.Component<Props, State> {
-  private turnSub?: Subscription
+  private readonly disposeBag = new DisposeBag()
 
   constructor(props: Props) {
     super(props)
@@ -28,11 +28,13 @@ export class GameBoardScreen extends React.Component<Props, State> {
   }
 
   componentDidMount() {
-    this.turnSub = this.state.viewModel.turn$.subscribe(turn => this.setState({ turn }))
+    Binder(this)
+      .bind('turn', this.state.viewModel.turn$)
+      .disposeBy(this.disposeBag)
   }
 
   componentWillUnmount() {
-    this.turnSub && this.turnSub.unsubscribe()
+    this.disposeBag.dispose()
   }
 
   private renderRow = (viewModels: MiniBoardViewModel[]) => (
