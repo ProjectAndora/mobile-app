@@ -9,6 +9,7 @@ export class MiniBoardViewModel {
 
   constructor(
     values$: Observable<FieldValue[][]>,
+    public readonly active$: Observable<boolean>,
     onPress: (pos: number[]) => void,
   ) {
     this.fieldsViewModels = trice(y =>

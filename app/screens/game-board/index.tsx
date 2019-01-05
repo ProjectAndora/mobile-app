@@ -90,6 +90,5 @@ const styles = StyleSheet.create({
   },
   miniBoard: {
     flex: 1,
-    margin: 10,
   },
 })

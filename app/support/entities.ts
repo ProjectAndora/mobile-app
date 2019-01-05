@@ -7,4 +7,5 @@ export enum FieldValue {
 export interface BoardState {
   turn: FieldValue,
   values: FieldValue[][][][],
+  lastTurn: number[][] | null,
 }

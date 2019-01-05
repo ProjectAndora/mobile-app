@@ -8,7 +8,7 @@ export class BoardViewModel {
   readonly miniBoardsViewModels: MiniBoardViewModel[][]
   readonly turn$: Observable<FieldValue>
 
-  private readonly onFieldPress = new Subject<[number[], number[]]>()
+  private readonly onFieldPress = new Subject<number[][]>()
 
   constructor() {
     const initialValues = trice(() =>
@@ -22,10 +22,11 @@ export class BoardViewModel {
     const initialState: BoardState = {
       turn: FieldValue.Cross,
       values: initialValues,
+      lastTurn: null,
     }
 
-    const state$ = this.onFieldPress.asObservable().pipe(
-      scan(({ turn, values }: BoardState, [[y, x], [subY, subX]]: [number[], number[]] ) => ({
+    const state$: Observable<BoardState> = this.onFieldPress.asObservable().pipe(
+      scan(({ turn, values }: BoardState, [[y, x], [subY, subX]]: number[][] ) => ({
         turn: turn === FieldValue.Cross ? FieldValue.Nought : FieldValue.Cross,
         values: replace(
           values,
@@ -43,7 +44,8 @@ export class BoardViewModel {
               ),
             ),
           ),
-        )
+        ),
+        lastTurn: [[y, x], [subY, subX]],
       }), initialState),
       startWith(initialState),
       publishReplay(1),
@@ -61,6 +63,15 @@ export class BoardViewModel {
         state$.pipe(
           map(state => state.values),
           map(values => values[y][x]),
+          publishReplay(1),
+          refCount(),
+        ),
+        state$.pipe(
+          map(state => state.lastTurn),
+          map(turn => turn === null 
+            ? true 
+            : turn[1][0] === y && turn[1][1] === x
+          ),
           publishReplay(1),
           refCount(),
         ),
