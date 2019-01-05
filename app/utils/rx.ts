@@ -27,5 +27,7 @@ const bindRxState = <Props, State, Key extends keyof State>(
 export const Binder = <Props, State>(component: Component<Props, State>, subs: Subscription[] = []) => ({
   bind: <Key extends keyof State>(key: Key, value$: Observable<State[Key]>) => 
     Binder(component, [...subs, bindRxState(component, key, value$)]),
+  bindAction: <T extends any>(value$: Observable<T>, action: (value: T) => void) =>
+    Binder(component, [...subs, value$.subscribe(action)]),
   disposeBy: (disposeBag: DisposeBag) => disposeBag.addMany(subs),
 })

@@ -7,6 +7,7 @@ import { trice, replace, array3HasRow } from '../utils'
 export class BoardViewModel {
   readonly miniBoardsViewModels: MiniBoardViewModel[][]
   readonly turn$: Observable<FieldValue>
+  readonly row$: Observable<FieldValue>
 
   private readonly onFieldPress = new Subject<number[][]>()
 
@@ -29,7 +30,7 @@ export class BoardViewModel {
 
     const state$: Observable<BoardState> = this.onFieldPress.asObservable().pipe(
       scan((state: BoardState, [[y, x], [subY, subX]]: number[][]) => {
-        const newValues = replace(
+        const values = replace(
           state.values,
           y,
           replace(
@@ -47,35 +48,38 @@ export class BoardViewModel {
           ),
         )
 
-        let newMiniFieldsRows = state.miniFieldsRows
+        let miniFieldsRows = state.miniFieldsRows
         if (state.miniFieldsRows[y][x] === FieldValue.Empty) {
           let newRowValue = FieldValue.Empty
-          if (array3HasRow(newValues[y][x], FieldValue.Cross)) {
+          if (array3HasRow(values[y][x], FieldValue.Cross)) {
             newRowValue = FieldValue.Cross
-          } else if (array3HasRow(newValues[y][x], FieldValue.Nought)) {
+          } else if (array3HasRow(values[y][x], FieldValue.Nought)) {
             newRowValue = FieldValue.Nought
           }
 
           if (newRowValue !== FieldValue.Empty) {
-            newMiniFieldsRows = replace(state.miniFieldsRows, y, replace(state.miniFieldsRows[y], x, newRowValue))
+            miniFieldsRows = replace(state.miniFieldsRows, y, replace(state.miniFieldsRows[y], x, newRowValue))
           }
+        }
+
+        let row = state.row
+        if (state.row === FieldValue.Empty) {
+          if (array3HasRow(miniFieldsRows, FieldValue.Cross)) {
+            row = FieldValue.Cross
+          } else if (array3HasRow(miniFieldsRows, FieldValue.Nought)) {
+            row = FieldValue.Nought
+          } 
         }
 
         return {
           turn: state.turn === FieldValue.Cross ? FieldValue.Nought : FieldValue.Cross,
-          values: newValues,
+          values,
           lastTurn: [[y, x], [subY, subX]],
-          miniFieldsRows: newMiniFieldsRows,
-          row: state.row,
+          miniFieldsRows,
+          row,
         }
       }, initialState),
       startWith(initialState),
-      publishReplay(1),
-      refCount(),
-    )
-
-    this.turn$ = state$.pipe(
-      map(state => state.turn),
       publishReplay(1),
       refCount(),
     )
@@ -88,9 +92,13 @@ export class BoardViewModel {
           refCount(),
         ),
         state$.pipe(
-          map(({ lastTurn }) => lastTurn === null 
-            ? true 
-            : lastTurn[1][0] === y && lastTurn[1][1] === x
+          map(({ lastTurn, row }) => row === FieldValue.Empty
+            ? (
+              lastTurn === null 
+                ? true 
+                : lastTurn[1][0] === y && lastTurn[1][1] === x
+            )
+            : false
           ),
           distinctUntilChanged(),
           publishReplay(1),
@@ -104,6 +112,19 @@ export class BoardViewModel {
         ),
         ([subY, subX]) => this.onFieldPress.next([[y, x], [subY, subX]]),
       ))
+    )
+
+    this.turn$ = state$.pipe(
+      map(state => state.turn),
+      publishReplay(1),
+      refCount(),
+    )
+
+    this.row$ = state$.pipe(
+      map(state => state.row),
+      distinctUntilChanged(),
+      publishReplay(1),
+      refCount(),
     )
   }
 }
