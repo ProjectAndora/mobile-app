@@ -1,2 +1,1 @@
-export * from './trice'
-export * from './replace'
+export * from './array-utils'
