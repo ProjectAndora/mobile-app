@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { Subscription } from 'rxjs'
 import { FieldValue } from '../../../support/entities'
-import { FieldViewModel } from '../../../viewmodels/field'
+import { FieldViewModel } from '../../../view-models/field'
 
 interface Props {
   viewModel: FieldViewModel

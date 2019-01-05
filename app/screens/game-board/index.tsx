@@ -3,8 +3,8 @@ import { Subscription } from 'rxjs'
 import { View, Text, StyleSheet } from 'react-native'
 import { MiniBoard } from './fragments/mini-board'
 import { Separator, SeparatorType } from './fragments/separator'
-import { BoardViewModel } from '../../viewmodels/board'
-import { MiniBoardViewModel } from '../../viewmodels/mini-board'
+import { BoardViewModel } from '../../view-models/board'
+import { MiniBoardViewModel } from '../../view-models/mini-board'
 import { FieldValue } from '../../support/entities'
 
 interface Props {
