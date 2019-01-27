@@ -1,4 +1,4 @@
-Mobile client for Project Andora POC
+Project Andora mobile app for iOS and Android
 ========================================
 
-Moved to [https://github.com/ProjectAndora](https://github.com/ProjectAndora)
+Stay tuned
