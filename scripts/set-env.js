@@ -3,30 +3,38 @@ const path = require('path')
 
 const filesDir = path.resolve(process.cwd(), 'files')
 const baseDir = process.cwd()
+const expoDir = path.resolve(filesDir, 'expo')
+const nativeDir = path.resolve(filesDir, 'native')
 
 const copyFile = (src, dst) => {
   const data = fs.readFileSync(src)
   fs.writeFileSync(dst, data)
 }
 
-const copyRelativeFile = (srcDir, dstDir, fileName) => {
-  copyFile(path.resolve(srcDir, fileName), path.resolve(dstDir, fileName))
-}
-
-const makeRelativeSymlink = (srcDir, dstDir, fileName) => {
-  fs.symlinkSync(path.resolve(dstDir, fileName), path.resolve(srcDir, fileName))
-}
-
-const unlinkPackageLock = () => {
+const copyRelativeFile = (srcDir, dstDir, fileName, revert = false) => {
+  const dstPath = path.resolve(dstDir, fileName)
   try {
-    fs.unlinkSync(path.resolve(baseDir, 'package-lock.json'))
+    fs.unlinkSync(dstPath)
   } catch (err) {
+  }
+  if (!revert) {
+    copyFile(path.resolve(srcDir, fileName), dstPath)
+  }
+}
+
+const makeRelativeSymlink = (srcDir, dstDir, fileName, revert = false) => {
+  const dstPath = path.resolve(dstDir, fileName)
+  try {
+    fs.unlinkSync(dstPath)
+  } catch (err) {
+  }
+  if (!revert) {
+    fs.symlinkSync(path.resolve(srcDir, fileName), dstPath)
   }
 }
 
 const linkPackageLock = fromDir => {
-  unlinkPackageLock()
-  makeRelativeSymlink(baseDir, fromDir, 'package-lock.json')
+  makeRelativeSymlink(fromDir, baseDir, 'package-lock.json')
 }
 
 const lockFile = path => {
@@ -73,6 +81,14 @@ const mergePackageJson = fromDir => {
   lockFile(mergedPath)
 }
 
+const copyExpoStuff = (revert = false) => {
+  makeRelativeSymlink(expoDir, baseDir, 'app.json', revert)
+  const assets = ['icon.png', 'splash.png']
+  for (asset of assets) {
+    makeRelativeSymlink(path.resolve(expoDir, 'assets'), path.resolve(baseDir, 'assets'), asset, revert)
+  }
+}
+
 const cleanEnv = 'clean'
 const expoEnv = 'expo'
 const nativeEnv = 'native'
@@ -81,14 +97,14 @@ const args = process.argv.slice(2)
 const env = args[0]
 
 if (env === cleanEnv) {
+  copyExpoStuff(true)
   mergePackageJson(null)
-  unlinkPackageLock()
+  makeRelativeSymlink(null, baseDir, 'package-lock.json', true)
 } else if (env === expoEnv) {
-  const expoDir = path.resolve(filesDir, 'expo')
+  copyExpoStuff()
   mergePackageJson(expoDir)
   linkPackageLock(expoDir)
 } else if (env === nativeEnv) {
-  const nativeDir = path.resolve(filesDir, 'native')
   mergePackageJson(nativeDir)
   linkPackageLock(nativeDir)
 } else {
