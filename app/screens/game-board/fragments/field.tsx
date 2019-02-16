@@ -8,9 +8,9 @@ import {
   ViewStyle,
   ImageRequireSource,
 } from 'react-native'
-import { FieldValue } from '../../../support/entities'
-import { FieldViewModel } from '../../../view-models/field'
-import { Binder, DisposeBag } from '../../../utils'
+import { FieldViewModel } from 'app/view-models/field'
+import { FieldValue } from 'app/support/entities'
+import { Binder, DisposeBag } from 'app/utils'
 
 interface Props {
   viewModel: FieldViewModel
@@ -46,9 +46,9 @@ export class Field extends React.Component<Props, State> {
     let image: ImageRequireSource | null = null
     const { value } = this.state
     if (value === FieldValue.Cross) {
-      image = require('../../../../assets/cross.png')
+      image = require('assets/cross.png')
     } else if (value === FieldValue.Nought) {
-      image = require('../../../../assets/nought.png')
+      image = require('assets/nought.png')
     }
 
     return image !== null

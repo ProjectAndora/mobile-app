@@ -1,5 +1,5 @@
 import { createStackNavigator } from 'react-navigation'
-import { MainScreen, GameBoardScreen } from '../screens'
+import { MainScreen, GameBoardScreen } from 'app/screens'
 
 export const MainNavigator = createStackNavigator({
   main: MainScreen,

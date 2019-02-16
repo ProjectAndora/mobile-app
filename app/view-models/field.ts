@@ -1,4 +1,4 @@
-import { FieldValue } from '../support/entities'
+import { FieldValue } from 'app/support/entities'
 import { Observable } from 'rxjs'
 
 export class FieldViewModel {

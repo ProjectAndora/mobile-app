@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs'
 import { map, distinctUntilChanged, publishReplay, refCount } from 'rxjs/operators'
 import { FieldViewModel } from './field'
-import { FieldValue } from '../support/entities'
-import { trice } from '../utils'
+import { FieldValue } from 'app/support/entities'
+import { trice } from 'app/utils'
 
 export class MiniBoardViewModel {
   readonly fieldsViewModels: FieldViewModel[][]

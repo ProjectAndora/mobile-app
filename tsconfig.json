@@ -1,16 +1,38 @@
 {
   "compilerOptions": {
     "target": "es6",
+    "moduleResolution": "node",
     "module": "es6",
     "lib": [
       "es6"
     ],
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react-native",
-    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "app/*": [
+        "./app/*"
+      ],
+      "assets/*": [
+        "./assets/*"
+      ]
+    },
     "noEmit": true,
+    "jsx": "preserve",
+    "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noStrictGenericChecks": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true
   },
-  "include": ["app"],
-  "exclude": ["node_modules"]
+  "include": [
+    "app"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

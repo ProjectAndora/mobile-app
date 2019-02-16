@@ -1,10 +1,10 @@
 import React from 'react'
 import { StyleSheet, View, StyleProp, ViewStyle } from 'react-native'
+import { MiniBoardViewModel } from 'app/view-models/mini-board'
+import { FieldViewModel } from 'app/view-models/field'
 import { Field } from './field'
 import { Separator, SeparatorType } from './separator'
-import { MiniBoardViewModel } from '../../../view-models/mini-board'
-import { FieldViewModel } from '../../../view-models/field'
-import { Binder, DisposeBag } from '../../../utils'
+import { Binder, DisposeBag } from 'app/utils'
 
 interface Props {
   viewModel: MiniBoardViewModel

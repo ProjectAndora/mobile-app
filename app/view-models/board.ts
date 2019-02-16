@@ -1,8 +1,8 @@
 import { Subject, Observable } from 'rxjs'
 import { scan, startWith, publishReplay, refCount, map, distinctUntilChanged } from 'rxjs/operators'
-import { MiniBoardViewModel } from './mini-board'
-import { FieldValue, BoardState } from '../support/entities'
-import { trice, replace, array3HasRow } from '../utils'
+import { MiniBoardViewModel } from 'app/view-models/mini-board'
+import { FieldValue, BoardState } from 'app/support/entities'
+import { trice, replace, array3HasRow } from 'app/utils'
 
 export class BoardViewModel {
   readonly miniBoardsViewModels: MiniBoardViewModel[][]
@@ -71,13 +71,15 @@ export class BoardViewModel {
           } 
         }
 
-        return {
+        const newState: BoardState = {
           turn: state.turn === FieldValue.Cross ? FieldValue.Nought : FieldValue.Cross,
           values,
           lastTurn: [[y, x], [subY, subX]],
           miniFieldsRows,
           row,
         }
+
+        return newState
       }, initialState),
       startWith(initialState),
       publishReplay(1),
