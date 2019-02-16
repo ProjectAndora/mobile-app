@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "project-andora-poc",
-    "slug": "project-andora-poc",
+    "name": "project-andora-app",
+    "slug": "project-andora-app",
     "privacy": "unlisted",
     "sdkVersion": "31.0.0",
     "platforms": [
