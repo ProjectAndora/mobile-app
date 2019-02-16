@@ -1,0 +1,7 @@
+project 'ProjectAndora/ProjectAndora.xcodeproj/'
+
+platform :ios, '9.0'
+
+target 'ProjectAndora' do
+
+end
