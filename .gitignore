@@ -1,2 +1,9 @@
-node_modules/**/*
-.expo/*
+/node_modules
+/.expo
+/package.json
+/package-lock.json
+/env.js
+/app/index.js
+/app.json
+/assets/icon.png
+/assets/splash.png
