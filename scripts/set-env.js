@@ -101,13 +101,6 @@ const copyNativeStuff = (revert = false) => {
   copyRelativeFile(nativeDir, baseDir, 'env.js', true, revert)
 }
 
-const clean = () => {
-  copyExpoStuff(true)
-  copyNativeStuff(true)
-  mergePackageJson(null)
-  makeRelativeSymlink(null, baseDir, 'package-lock.json', true)
-}
-
 const cleanEnv = 'clean'
 const expoEnv = 'expo'
 const nativeEnv = 'native'
@@ -116,14 +109,15 @@ const args = process.argv.slice(2)
 const env = args[0]
 
 if (env === cleanEnv) {
-  clean()
+  copyExpoStuff(true)
+  copyNativeStuff(true)
+  mergePackageJson(null)
+  makeRelativeSymlink(null, baseDir, 'package-lock.json', true)
 } else if (env === expoEnv) {
-  clean()
   copyExpoStuff()
   mergePackageJson(expoDir)
   linkPackageLock(expoDir)
 } else if (env === nativeEnv) {
-  clean()
   copyNativeStuff()
   mergePackageJson(nativeDir)
   linkPackageLock(nativeDir)
