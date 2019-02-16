@@ -2,3 +2,5 @@
 /.expo
 /package.json
 /package-lock.json
+/env.js
+/app/index.js

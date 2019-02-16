@@ -3,6 +3,7 @@ const path = require('path')
 
 const filesDir = path.resolve(process.cwd(), 'files')
 const baseDir = process.cwd()
+const appDir = path.resolve(baseDir, 'app')
 const expoDir = path.resolve(filesDir, 'expo')
 const nativeDir = path.resolve(filesDir, 'native')
 
@@ -11,7 +12,7 @@ const copyFile = (src, dst) => {
   fs.writeFileSync(dst, data)
 }
 
-const copyRelativeFile = (srcDir, dstDir, fileName, revert = false) => {
+const copyRelativeFile = (srcDir, dstDir, fileName, lock = false, revert = false) => {
   const dstPath = path.resolve(dstDir, fileName)
   try {
     fs.unlinkSync(dstPath)
@@ -19,6 +20,9 @@ const copyRelativeFile = (srcDir, dstDir, fileName, revert = false) => {
   }
   if (!revert) {
     copyFile(path.resolve(srcDir, fileName), dstPath)
+    if (lock) {
+      lockFile(dstPath)
+    }
   }
 }
 
@@ -74,7 +78,7 @@ const mergePackageJson = fromDir => {
   const mergedPath = path.resolve(baseDir, fileName)
 
   try {
-    unlockFile(mergedPath)
+    fs.unlinkSync(mergedPath)
   } catch (err) {
   }
   fs.writeFileSync(mergedPath, JSON.stringify(merged, undefined, 2))
@@ -87,6 +91,21 @@ const copyExpoStuff = (revert = false) => {
   for (asset of assets) {
     makeRelativeSymlink(path.resolve(expoDir, 'assets'), path.resolve(baseDir, 'assets'), asset, revert)
   }
+
+  copyRelativeFile(expoDir, appDir, 'index.js', true, revert)
+  copyRelativeFile(expoDir, baseDir, 'env.js', true, revert)
+}
+
+const copyNativeStuff = (revert = false) => {
+  copyRelativeFile(nativeDir, appDir, 'index.js', true, revert)
+  copyRelativeFile(nativeDir, baseDir, 'env.js', true, revert)
+}
+
+const clean = () => {
+  copyExpoStuff(true)
+  copyNativeStuff(true)
+  mergePackageJson(null)
+  makeRelativeSymlink(null, baseDir, 'package-lock.json', true)
 }
 
 const cleanEnv = 'clean'
@@ -97,14 +116,15 @@ const args = process.argv.slice(2)
 const env = args[0]
 
 if (env === cleanEnv) {
-  copyExpoStuff(true)
-  mergePackageJson(null)
-  makeRelativeSymlink(null, baseDir, 'package-lock.json', true)
+  clean()
 } else if (env === expoEnv) {
+  clean()
   copyExpoStuff()
   mergePackageJson(expoDir)
   linkPackageLock(expoDir)
 } else if (env === nativeEnv) {
+  clean()
+  copyNativeStuff()
   mergePackageJson(nativeDir)
   linkPackageLock(nativeDir)
 } else {
