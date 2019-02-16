@@ -1,3 +1,4 @@
 /node_modules
 /.expo
+/package.json
 /package-lock.json
