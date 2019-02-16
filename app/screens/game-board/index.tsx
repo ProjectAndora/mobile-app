@@ -1,12 +1,12 @@
 import React from 'react'
 import { View, Text, StyleSheet, Alert } from 'react-native'
+import { filter } from 'rxjs/operators'
 import { MiniBoard } from './fragments/mini-board'
 import { Separator, SeparatorType } from './fragments/separator'
-import { BoardViewModel } from '../../view-models/board'
-import { MiniBoardViewModel } from '../../view-models/mini-board'
-import { FieldValue } from '../../support/entities'
-import { Binder, DisposeBag } from '../../utils'
-import { filter } from 'rxjs/operators'
+import { BoardViewModel } from 'app/view-models/board'
+import { MiniBoardViewModel } from 'app/view-models/mini-board'
+import { FieldValue } from 'app/support/entities'
+import { Binder, DisposeBag } from 'app/utils'
 
 interface Props {
 }
