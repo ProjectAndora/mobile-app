@@ -1,7 +1,7 @@
 {
   "main": "app/index.js",
   "scripts": {
-    "env-clean": "node scripts/set-env.js clean",
+    "env-clean": "node scripts/set-env.js clean && npm install",
     "env-expo": "npm run env-clean && node scripts/set-env.js expo && npm install",
     "env-native": "npm run env-clean && node scripts/set-env.js native && npm install"
   },
