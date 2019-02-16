@@ -42,11 +42,8 @@ const linkPackageLock = fromDir => {
 }
 
 const lockFile = path => {
-  fs.chmodSync(path, 0o444)
-}
-
-const unlockFile = path => {
-  fs.chmodSync(path, 0o664)
+  const stat = fs.statSync(path)
+  fs.chmodSync(path, stat.mode & ~0o222)
 }
 
 const mergePackageJson = fromDir => {
@@ -101,6 +98,13 @@ const copyNativeStuff = (revert = false) => {
   copyRelativeFile(nativeDir, baseDir, 'env.js', true, revert)
 }
 
+const clean = () => {
+  copyExpoStuff(true)
+  copyNativeStuff(true)
+  mergePackageJson(null)
+  makeRelativeSymlink(null, baseDir, 'package-lock.json', true)
+}
+
 const cleanEnv = 'clean'
 const expoEnv = 'expo'
 const nativeEnv = 'native'
@@ -109,15 +113,14 @@ const args = process.argv.slice(2)
 const env = args[0]
 
 if (env === cleanEnv) {
-  copyExpoStuff(true)
-  copyNativeStuff(true)
-  mergePackageJson(null)
-  makeRelativeSymlink(null, baseDir, 'package-lock.json', true)
+  clean()
 } else if (env === expoEnv) {
+  clean()
   copyExpoStuff()
   mergePackageJson(expoDir)
   linkPackageLock(expoDir)
 } else if (env === nativeEnv) {
+  clean()
   copyNativeStuff()
   mergePackageJson(nativeDir)
   linkPackageLock(nativeDir)
