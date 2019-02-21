@@ -136,6 +136,7 @@
 				19513FAA22184ED100961184 /* Frameworks */,
 				19513FAB22184ED100961184 /* Resources */,
 				19869EB2221996A70084709E /* Embed Frameworks */,
+				198F59C3221F2E6D00EC3356 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -190,6 +191,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		198F59C3221F2E6D00EC3356 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../../node_modules/react-native/scripts/react-native-xcode.sh app/index.js\n";
+		};
 		489B83C0A6F997D30673FB93 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
