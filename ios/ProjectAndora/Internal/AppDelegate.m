@@ -1,5 +1,5 @@
 #import "AppDelegate.h"
-#import <React/RCTRootView.h>
+#import <ReactNativeLib/ReactNativeLib.h>
 
 @interface AppDelegate ()
 
@@ -21,7 +21,7 @@
 #endif
   
   UIViewController *vc = [[UIViewController alloc] init];
-  vc.view = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation moduleName:@"App" initialProperties:nil launchOptions:launchOptions];
+  vc.view = [ReactRootView rootViewWithBundleURL:jsCodeLocation moduleName:@"App" initialProperties:nil launchOptions:launchOptions];
   
   self.window.rootViewController = vc;
   [self.window makeKeyAndVisible];
