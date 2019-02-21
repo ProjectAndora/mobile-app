@@ -136,7 +136,7 @@
 				19513FAA22184ED100961184 /* Frameworks */,
 				19513FAB22184ED100961184 /* Resources */,
 				19869EB2221996A70084709E /* Embed Frameworks */,
-				198F59C3221F2E6D00EC3356 /* ShellScript */,
+				198F59C3221F2E6D00EC3356 /* Bundle React Native code and assets */,
 			);
 			buildRules = (
 			);
@@ -191,7 +191,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		198F59C3221F2E6D00EC3356 /* ShellScript */ = {
+		198F59C3221F2E6D00EC3356 /* Bundle React Native code and assets */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -200,6 +200,7 @@
 			);
 			inputPaths = (
 			);
+			name = "Bundle React Native code and assets";
 			outputFileListPaths = (
 			);
 			outputPaths = (
