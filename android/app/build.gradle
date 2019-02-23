@@ -5,8 +5,7 @@ def safeExtGet(prop, fallback) {
 }
 
 project.ext.react = [
-    entryFile: "app/index.js",
-    inputExcludes: ["android-sdk/**", "ios-sdk/**"]
+    entryFile: "app/index.js"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
