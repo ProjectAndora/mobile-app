@@ -1,13 +1,12 @@
 {
   "dependencies": {
-    "react-navigation": "^3.0.9",
-    "rxjs": "^6.3.3"
+    "react-navigation": "^3.9.1",
+    "rxjs": "^6.5.1"
   },
   "devDependencies": {
     "babel-plugin-module-resolver": "^3.2.0",
-    "typescript": "^3.2.2",
-    "@types/react": "^16.7.18",
-    "@types/react-native": "~0.57.23",
-    "@types/react-navigation": "^3.0.1"
+    "typescript": "^3.4.5",
+    "@types/react": "^16.8.16",
+    "@types/react-native": "~0.57.51"
   }
 }
